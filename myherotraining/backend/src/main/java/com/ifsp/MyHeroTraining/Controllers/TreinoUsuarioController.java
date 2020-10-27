@@ -3,6 +3,7 @@ package com.ifsp.MyHeroTraining.Controllers;
 import com.ifsp.MyHeroTraining.DTO.CadastroUsuarioDto;
 import com.ifsp.MyHeroTraining.Forms.AtualizaUsuarioTreinoForms;
 import com.ifsp.MyHeroTraining.Models.CadastroUsuario;
+import com.ifsp.MyHeroTraining.Models.Fase;
 import com.ifsp.MyHeroTraining.Models.Treino;
 import com.ifsp.MyHeroTraining.Models.Treino_Usuario;
 import com.ifsp.MyHeroTraining.repository.TreinoUsuarioRepository;
@@ -11,6 +12,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.net.URI;
+import java.util.List;
 import java.util.Optional;
 
 @RestController
@@ -31,4 +33,14 @@ public class TreinoUsuarioController {
     
     }
 
+    @GetMapping("/recupera")
+    public List<Treino_Usuario> recuperaFase(int id){
+        List<Treino_Usuario> fase   = treinoUsuarioRepository.findByusuario(id);
+        return fase;
+
+        }
+    
+    
+    
+    
 }

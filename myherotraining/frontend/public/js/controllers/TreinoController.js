@@ -125,7 +125,8 @@ angular
     var buscaTreinosFeito = function () {
       TreinoService.buscaTreinosFeitos(IdUsuario).success(function (data) {
         for (var j = 0; j < data.length; j++) {
-          faseTerminadas.push(data[j].id);
+          console.log(faseTerminadas);
+          faseTerminadas.push(data[j].id_fase);
         }
       });
     };
@@ -163,21 +164,22 @@ angular
     };
     var atualizaFaseBanco = function (idFase) {
       TreinoService.atualizaFaseConcluida(idFase).success(function (data) {});
-    }; 
+    };
     var atualizaIdusuarioTreino = function () {
-			var idFaseAtual = {
-            id: 1,
-            idUsuario: IdUsuario
-        }
-        TreinoService.atualizaIdusuarioTreino(idFaseAtual).success(function (data) {
-        });
-	   
+      console.log('atualizaIdUsuario' + idFase);
+      var idFaseAtual = {
+        id_usuario: IdUsuario,
+        fase: idFase,
+      };
+      TreinoService.atualizaIdusuarioTreino(idFaseAtual).success(function (
+        data
+      ) {});
     };
     $scope.finalizar = function (valor) {
       var fase_troca;
       //import swal from 'sweetalert';
       atualizaFaseBanco(id);
-      atualizaIdusuarioTreino(valor);
+
       liberarProxFase = true;
       idFase = parseInt(id) + parseInt(1);
       if (quantidadeFases === id) {
@@ -185,6 +187,8 @@ angular
       }
       TreinoService.carregaIdTreino(id).success(function (data) {
         idFase = data[0].id;
+        console.log('carregaIdTreino' + idFase);
+        atualizaIdusuarioTreino();
         // console.log('trieno' + data);
         /* refresh();
         $location.path('treinos/' + idFase).reload();
