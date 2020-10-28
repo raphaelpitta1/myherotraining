@@ -81,17 +81,19 @@
       style="align-items: center"
     >
       <img
-        src="{{exercicio.caminho_gif}}"
+        src="/imagem/agachamento-com-elevacao.gif"
+        
         alt="..."
         id="img"
         style="height: 450px; width: 90%"
       />
       <h5 class="card-title">{{exercicio.descricao}}</h5>
-      <h5 class="card-text">{{exercicio.qntd}}</h5>
+      <p class="card-text">Número de repetições: {{exercicio.qntd}}</p>
+      <p class="card-text" id="serieFeitas">Número de repetições realizadas: 0</p>
     </div>
   </div>
 
-  <div class="">
+  <!--div class="">
     <button
       id="btn_iniciar"
       type="button"
@@ -111,13 +113,12 @@
       ng-click="proximo()"
     >
       Proximo
-    </button>
+    </button-->
     <button
       id="btn_finalizar"
       type="button"
       ng-model="model.valor"
       class="btn btn-danger"
-      ng-show="final()"
       ng-click="finalizar()"
     >
       Finalizar

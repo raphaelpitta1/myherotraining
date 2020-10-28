@@ -31,7 +31,7 @@ angular.module('myHeroTraining').factory('TreinoService', function ($http) {
   };
   var atualizaIdusuarioTreino = function (model) {
     //console.log('teste' + model.id);
-    return $http.post('http://localhost:8080/treinousuario', model);
+    return $http.put('http://localhost:8080/treinousuario', model);
   };
 
   /* var buscaIdUsuario = function (token) {
@@ -76,6 +76,10 @@ angular.module('myHeroTraining').factory('TreinoService', function ($http) {
       },
     });
   };
+  var salvaData = function (id) {
+    return $http.put('http://localhost:8080/fasedia',id)
+
+}
   return {
     getTimeCronometroService: getTimeCronometroService,
     salvaTimeCronometroService: salvaTimeCronometroService,
@@ -89,5 +93,6 @@ angular.module('myHeroTraining').factory('TreinoService', function ($http) {
     atualizaIdUsuario: atualizaIdUsuario,
     fotoFase: fotoFase,
     dadosCadastro: dadosCadastro,
+    salvaData : salvaData
   };
 });

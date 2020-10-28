@@ -7,37 +7,6 @@ angular
     $location
   ) {
     $scope.model = {};
-    $scope.fotos = [
-      {
-        url:
-          'https://cdn.pixabay.com/photo/2017/08/07/14/02/people-2604149_960_720.jpg',
-      },
-    ];
-
-    $scope.fotoP = [
-      {
-        url:
-          'https://gooutside-static-cdn.akamaized.net/wp-content/uploads/sites/3/2020/03/treino-e-dicas-para-se-manter-em-forma-em-casa.jpg',
-      },
-    ];
-    $scope.fotoX = [
-      {
-        url:
-          'https://www.runtastic.com/blog/wp-content/uploads/2019/03/thumbnail_1200x800.jpg',
-      },
-      {
-        url:
-          'https://www.bodynutry.ind.br/images/noticias/grd/71ba53d6fccbc4aeeb2aee3c4dc21281.jpg',
-      },
-      {
-        url:
-          'https://conteudo.imguol.com.br/c/entretenimento/a7/2016/05/30/homem-fazendo-flexao-1464620034199_v2_1920x1279.jpg',
-      },
-    ];
-    $scope.foto = {
-      urlx:
-        './imagem/Chega%20de%20desculpas_%20malhe%20fora%20da%20academia.gif',
-    };
     var id = $routeParams.id;
     var conlusao;
     var exibeBotao = 1;
@@ -50,6 +19,7 @@ angular
     var liberarTodasFases;
     var primeirafase = [];
     var liberar;
+    var repeticaoExercicio =0;
 
     var IdUsuario = sessionStorage.getItem('id');
 
@@ -125,7 +95,7 @@ angular
     var buscaTreinosFeito = function () {
       TreinoService.buscaTreinosFeitos(IdUsuario).success(function (data) {
         for (var j = 0; j < data.length; j++) {
-          console.log(faseTerminadas);
+       
           faseTerminadas.push(data[j].id_fase);
         }
       });
@@ -166,73 +136,109 @@ angular
       TreinoService.atualizaFaseConcluida(idFase).success(function (data) {});
     };
     var atualizaIdusuarioTreino = function () {
-      console.log('atualizaIdUsuario' + idFase);
-      var idFaseAtual = {
+        var idFaseAtual = {
         id_usuario: IdUsuario,
-        fase: idFase,
+        id_fase: id,
       };
-      TreinoService.atualizaIdusuarioTreino(idFaseAtual).success(function (
-        data
-      ) {});
+      TreinoService.atualizaIdusuarioTreino(idFaseAtual).success(function (data) {
+      });
     };
-    $scope.finalizar = function (valor) {
-      var fase_troca;
-      //import swal from 'sweetalert';
-      atualizaFaseBanco(id);
 
-      liberarProxFase = true;
-      idFase = parseInt(id) + parseInt(1);
-      if (quantidadeFases === id) {
-        liberarTodasFases = true;
-      }
+    var carregaIdTreino = function(){
+
       TreinoService.carregaIdTreino(id).success(function (data) {
         idFase = data[0].id;
-        console.log('carregaIdTreino' + idFase);
-        atualizaIdusuarioTreino();
-        // console.log('trieno' + data);
-        /* refresh();
-        $location.path('treinos/' + idFase).reload();
-        refresh();*/
-        var tempo_corrido = `${
-          document.getElementById('timer_horas').innerText
-        }:${document.getElementById('timer_minutos').innerText}:${
-          document.getElementById('timer_segundos').innerText
-        }`;
-        var id_usuario = IdUsuario,
-          id_fase = idFase,
-          tempo = tempo_corrido;
-        var param = { id_usuario: id_usuario, id_fase: id_fase, tempo: tempo };
-
-        swal(
-          'Parabéns, você concluiu seu treino!',
-          `Tempo de treino:${tempo}`,
-          'success',
-          {
-            buttons: 'Continuar',
+    });
+    }
+    carregaIdTreino();
+    $scope.finalizar = function (valor) {
+      atualizaIdusuarioTreino
+      repeticaoExercicio++;
+      // liberarProxFase = true;
+     // idFase = parseInt(id) + parseInt(1);
+      //  if (quantidadeFases === id) {
+      //    liberarTodasFases = true;
+      //}
+          if(repeticaoExercicio ===1){
+         
+          var data = {
+              dataTreino: new Date(),
+              idfase : idFase,
+              idUsuario : IdUsuario
           }
-        ).then(
-          function (isConfirm) {
-            if (isConfirm) {
-              refresh();
-              salvaTimeCronometro(param);
-              $location.path('/treinos/' + idFase);
-              refresh();
-              refresh();
-            }
-          },
-          function () {
-            console.log('BACK');
-          }
-        );
-      });
+          
+          TreinoService.salvaData(data).success(function (data) {
+           });
+      }
+      if (repeticaoExercicio < 3) {
+          TreinoService.carregaIdTreino(id).success(function (data) {
+              idFase = data[0].id;
+              let timerInterval
+              document.getElementById('serieFeitas').innerHTML ="Número de repetições realizadas: " +repeticaoExercicio ;
+              document.getElementById('img').style.filter =  'grayscale(100%)';
+              Swal.fire({
+                  title: 'Descanse!',
+                   html: 'Você poderá repetir o mesmo exercicío em <b>30</b> segundos.',
+                  timer: 30000,
+                  allowOutsideClick: false,
+                  timerProgressBar: true,
+                  willOpen: () => {
+                      Swal.showLoading()
+                      timerInterval = setInterval(() => {
+                          const content = Swal.getContent()
+                          if (content) {
+                              const b = content.querySelector('b')
+                              if (b) {
+                                  var texto = Swal.getTimerLeft()/1000
+                                  var resultado  = texto.toString().substring(0,2);
+                                  b.textContent = resultado;
+                              }
+                          }
+                      }, 1000)
+                  },
+                  onClose: () => {
+                      clearInterval(timerInterval)
+                      Swal.fire({
+                              title: 'Inicar Repetição',
+                              icon: 'info',
+                              text: ' Repetições realizadas: ' +repeticaoExercicio + ' de 3'
+                          }
+                      );
+                      document.getElementById('img').style.filter =  '';
+                      $location.path('treino/inicio/' + idFase);
+                  }
+              }).then((result) => {
+                //  Read more about handling dismissals below
+                  if (result.dismiss === Swal.DismissReason.timer) {
+                      console.log('fechando o timer')
+                  }
+              })
+              function refresh() {
+                  setTimeout(function () {
+                      location.reload();
+                  }, 100);
+              }
+          });
 
-      //escondendo cronometro
-    };
+        } else {
+          TreinoService.carregaIdTreino(id).success(function (data) {
+              idFase = data[0].id;
+              
+              //  atualizaFaseBanco(id);
+              atualizaIdusuarioTreino();
+              $location.path('treinos/' + idFase).reload();
+          });
+      
+    }
+  }
+    var atualizData = function(){
+
+    }
 
     var salvaTimeCronometro = function (parametroTempo) {
       TreinoService.salvaTimeCronometroService(parametroTempo).success(
         function (data) {
-          console.log(data);
+         
         }
       );
     };
