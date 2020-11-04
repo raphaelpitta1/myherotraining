@@ -20,8 +20,8 @@ public interface FaseDiaRepository extends JpaRepository<FaseDia, Integer> {
     @Query(value = "select fase_Dia.id_fase from fase_Dia where fase_dia.id_usuario = :data ;", nativeQuery = true)
     Integer FindByDataTreino(@Param("data") Date data);*/
     @Transactional
-    @Query(value = "select max(data_treino),id, idfase from fase_Dia f where id_usuario = :id " +
-            "GROUP BY id, idfase ;", nativeQuery = true)
+    @Query(value = "select max(data_treino),idfase from fase_Dia  where id_usuario = :id " +
+            "GROUP BY idfase ORDER BY MAX(data_treino) DESC LIMIT 1 ;", nativeQuery = true)
     RetornoFaseDia findByIdUsuario(@Param("id") int id);
 
 }
