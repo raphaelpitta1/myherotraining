@@ -114,8 +114,10 @@ angular
       }
     };
 
+   
     //logica de habilitar e desabilitar fases
     $scope.desabilita = function (valor) {
+   //   alert(faseTerminadas)
       var ProximaFase = faseTerminadas[faseTerminadas.length - 1];
       if (
         (valor === 1 && faseTerminadas.indexOf(valor) === -1) ||
@@ -125,11 +127,15 @@ angular
           faseTerminadas.indexOf(valor) === -1) ||
         (quantidadeFases === valor && liberarTodasFases === true)
       ) {
+        
+        
         return false;
       } else {
         faseTerminadas.indexOf(valor) != -1 ||
           faseTerminadas.indexOf(valor) === -1;
         return true;
+
+       
       }
     };
     var atualizaFaseBanco = function (idFase) {
@@ -174,7 +180,7 @@ angular
           TreinoService.carregaIdTreino(id).success(function (data) {
               idFase = data[0].id;
               let timerInterval
-              document.getElementById('serieFeitas').innerHTML ="Número de repetições realizadas: " +repeticaoExercicio ;
+              document.getElementById('serieFeitas').innerHTML ="Número de séries realizadas: " +repeticaoExercicio ;
               document.getElementById('img').style.filter =  'grayscale(100%)';
               Swal.fire({
                   title: 'Descanse!',
@@ -199,9 +205,9 @@ angular
                   onClose: () => {
                       clearInterval(timerInterval)
                       Swal.fire({
-                              title: 'Inicar Repetição',
+                              title: 'Inicar Série',
                               icon: 'info',
-                              text: ' Repetições realizadas: ' +repeticaoExercicio + ' de 3'
+                              text: ' Número de Séries realizadas: ' +repeticaoExercicio + ' de 3'
                           }
                       );
                       document.getElementById('img').style.filter =  '';

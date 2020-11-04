@@ -26,6 +26,13 @@ angular
     var ultimaDataTreino;
     var idUltimaFase;
     var dataAtual = new Date();
+    var dataHoje = moment(dataAtual).format('DD/MM/YYYY');
+
+    var dataTreino;
+
+ 
+
+
  
     var carrega = function () {
       myHeroTraining.carregarTreinos().success(function (data) {
@@ -38,13 +45,11 @@ angular
     
     var carregaData = function(){
       myHeroTraining.carregaFaseData(IdUsuario).success(function(data){
-        console.log(data)
-        idUltimaFase = data.idfase;
+              idUltimaFase = data.idfase;
           ultimaDataTreino = data.max;
-
-          console.log(idUltimaFase)
-          console.log(ultimaDataTreino)
+            dataTreino = moment(ultimaDataTreino).format('DD/MM/YYYY');
         
+      
       
       });
     }
@@ -58,36 +63,64 @@ angular
       
       }, 1000);
     }
-    var updateBase = function(id){
+    var updateBase = function(valor){
      // if(valor !== idUltimaFase && teste1 !== teste2){
 
+      if(valor !== idUltimaFase && dataTreino !== dataAtual){
      var model ={
-      id_fase : id,
-       id_usuario : IdUsuario 
-     }
-    
-        myHeroTraining.atualizahistorico(model).success(function(data){
-          console.log(model)
+      id_fase : valor,
+       id_usuario : IdUsuario}
+        myHeroTraining.atualizahistorico(model).success(function(data){       
+
         });  
+     }
+      
     }
-    var teste1 = '28/10/20'
-    var teste2 = '29/10/20'
+  
       $scope.exibircard = function(valor){
-     if(valor === idUltimaFase && teste1 === teste2 || idUltimaFase === undefined 
-        && valor === faseExistente[0] || valor === faseExistente[0] +1 && teste1 != teste2 && valor !== idUltimaFase && ultimaDataTreino!==undefined ){
+     /*if(valor === idUltimaFase && teste1 === teste2 || idUltimaFase === undefined 
+        && valor === faseExistente[0] || valor === faseExistente[0] +1 && teste1 != teste2 && valor !== idUltimaFase && 
+        ultimaDataTreino!==undefined ){
        //  updateBase(valor);
        return true;
       
           //mostra elemento quando true
 
-      }
+      }*/
+
+        var teste;
+
+      //  updateBase(teste);
+
+     console.log(dataHoje)
+     console.log(dataTreino)
+
+     /* if(valor === idUltimaFase && dataHoje === dataTreino || idUltimaFase === undefined 
+        && valor === faseExistente[0] || valor === faseExistente[0] +1 && 
+        dataHoje !== dataTreino && valor !== idUltimaFase && 
+        idUltimaFase !==undefined ){*/
+
+          if(valor === idUltimaFase && dataHoje === dataTreino || valor !== idUltimaFase && dataTreino !== dataHoje){
+
+      
+            return true;
+
+
+          }
+           
+           
+    
+          //mostra elemento quando true;
+
+        
      else {
        //false não mostra o ducumento
       return false; 
      }
     }
     //updateBase();
+    window.onload = carregaData();
     carrega();
-    carregaData();
+    
     //getTimeCronometro();
   });
